@@ -1,3 +1,7 @@
 export function useFormUX() {
-  return {}
+  return {
+    focusFirstError: () => {},
+    scrollToError: () => {},
+    getErrorFields: () => []
+  }
 }
