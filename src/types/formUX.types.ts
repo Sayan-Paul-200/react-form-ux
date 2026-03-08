@@ -7,3 +7,8 @@ export interface UseFormUXReturn {
   scrollToError: () => void
   getErrorFields: () => string[]
 }
+
+export interface ErrorSummaryProps {
+  errors: Record<string, any>
+  title?: string
+}
