@@ -5,18 +5,18 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-
-  "files": ["dist"],
-
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
-
   "peerDependencies": {
     "react": ">=18"
   },
-
   "keywords": [
     "react",
     "forms",
@@ -29,8 +29,12 @@
   "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
+    "jsdom": "^28.1.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
