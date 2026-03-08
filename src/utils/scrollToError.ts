@@ -1,5 +1,7 @@
+import { getErrorFields } from "./getErrorFields"
+
 export function scrollToError(errors: Record<string, unknown>) {
-  const fields = Object.keys(errors || {})
+  const fields = getErrorFields(errors)
 
   if (!fields.length) return
 
