@@ -4,12 +4,16 @@ export function getErrorFields(
 ): string[] {
   const fields: string[] = []
 
-  for (const key in errors) {
+  for (const key of Object.keys(errors)) {
     const value = errors[key]
 
-    const path = parent ? `${parent}.${key}` : key
+    const path = parent
+      ? /^\d+$/.test(key)
+        ? `${parent}[${key}]`
+        : `${parent}.${key}`
+      : key
 
-    if (value && typeof value === "object" && !value.message) {
+    if (value && typeof value === "object" && !("message" in value)) {
       fields.push(...getErrorFields(value, path))
     } else {
       fields.push(path)

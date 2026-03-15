@@ -1,6 +1,7 @@
 import React from "react"
 import { ErrorSummaryProps } from "../types/formUX.types"
 import { getErrorFields } from "../utils/getErrorFields"
+import { findFieldElement } from "../utils/findFieldElement"
 
 export function ErrorSummary({
   errors,
@@ -16,7 +17,7 @@ export function ErrorSummary({
 
       <ul>
       {fields.map((field) => {
-          const parts = field.split(".")
+          const parts = field.split(/[.\[\]]/).filter(Boolean)
           let error: any = errors
           for (const part of parts) {
             error = error?.[part]
@@ -28,14 +29,7 @@ export function ErrorSummary({
               <button
                 type="button"
                 onClick={() => {
-                  const element = document.querySelector(
-                    `[name="${field}"]`
-                  ) as HTMLElement | null
-                    ?? document.querySelector(
-                    `[id="${field}"]`
-                  ) as HTMLElement | null
-
-                  element?.focus()
+                  findFieldElement(field)?.focus()
                 }}
               >
                 {message}
