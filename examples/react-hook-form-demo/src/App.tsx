@@ -33,8 +33,10 @@ export default function App() {
   };
 
   const onError = () => {
-    scrollToError();
-    focusFirstError();
+    setTimeout(() => {
+      scrollToError();
+      focusFirstError();
+    }, 100);
   };
 
   return (
