@@ -12,12 +12,24 @@ The library is **headless and framework-agnostic**, so it works with any React f
 
 ---
 
+## Demo
+
+Submitting an invalid form automatically scrolls to the first error and focuses the field.
+
+![react-form-ux demo](./docs/react-form-ux-demo.gif)
+
+---
+
+## Example
+
+![example screenshot](./docs/react-form-ux-demo-screenshot.png)
+
 ## ✨ Features
 
 - Focus the **first invalid input automatically**
 - Scroll to validation errors in long forms
 - Generate **accessible error summaries**
-- Works with **React Hook Form, Formik, or custom forms**
+- Works seamlessly with **React Hook Form, Formik, Zod, or custom forms**
 - Tiny bundle size
 - Headless API (bring your own UI)
 
@@ -28,122 +40,110 @@ The library is **headless and framework-agnostic**, so it works with any React f
 ```bash
 npm install react-form-ux
 ```
-
-or
-
 ```bash
 yarn add react-form-ux
 ```
-
----
-
-## ⚡Quick Example
-
-```javascript
-import { useFormUX } from "react-form-ux";
-
-function MyForm({ errors }) {
-  const { focusFirstError } = useFormUX({ errors });
-
-  const handleSubmit = () => {
-    if (Object.keys(errors).length > 0) {
-      focusFirstError();
-    }
-  };
-
-  return <form onSubmit={handleSubmit}>{/* form inputs */}</form>;
-}
+```bash
+pnpm add react-form-ux
 ```
-
----
-
-## 🧠 The Problem
-
-Most React form libraries focus on **form state and validation**, but developers still need to manually implement UX behaviors such as:
-
-- focusing the first invalid input after submit
-- scrolling long forms to the first error
-- showing accessible error summaries
-- guiding the user to fix validation issues
-
-Example of common ad-hoc code developers write repeatedly:
-
-```javascript
-const firstError = document.querySelector("[aria-invalid='true']");
-firstError?.focus();
-```
-
-This logic gets duplicated across projects.
-
-`react-form-ux` provides **reusable UX primitives** so you don’t have to rewrite it.
 
 ---
 
 ## 🛠 Usage
 
-Basic usage with any form library:
+Basic usage with any form library is extremely simple. `react-form-ux` only requires a standard JavaScript object where the keys correspond to your input `name` attributes, and the values are the error objects.
 
 ```javascript
 import { useFormUX } from "react-form-ux";
 
+// 1. Pass in your form state errors
 const { focusFirstError, scrollToError } = useFormUX({
   errors,
 });
+
+// 2. Call them in your form submission handler!
+const onError = () => {
+    // We recommend a tiny timeout so React has time to paint 
+    // any new error summary elements to the DOM first!
+    setTimeout(() => {
+        scrollToError();
+        focusFirstError();
+    }, 100);
+}
 ```
 
-Available helpers:
+### Available API Helpers:
 
 | Function          | Description                                   |
 | ----------------- | --------------------------------------------- |
-| focusFirstError() | Focus the first invalid input field           |
-| scrollToError()   | Scroll smoothly to the first validation error |
-| getErrorFields()  | Get a list of fields with validation errors   |
+| `focusFirstError()` | Focus the first invalid input field           |
+| `scrollToError()`   | Scroll smoothly to the first validation error |
+| `getErrorFields()`  | Get an array of field names with validation errors|
 
 ---
 
-## 📋 ErrorSummary Component
+## 🔗 Example with React Hook Form & Zod
 
-You can also display a summary of validation errors.
+`react-form-ux` is built perfectly for modern validation pipelines like Zod integrated with React Hook Form via `@hookform/resolvers/zod`. It traverses standard error schemas natively.
 
-```javascript
-import { ErrorSummary } from "react-form-ux";
-
-<ErrorSummary errors={errors} />
-```
-
-This improves accessibility and helps users quickly identify issues in long forms.
-
----
-
-## 🔗 Example with React Hook Form
-
-```javascript
+```jsx
 import { useForm } from "react-hook-form";
-import { useFormUX } from "react-form-ux";
+import { useFormUX, ErrorSummary } from "react-form-ux";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-function SignupForm() {
-  const { register, handleSubmit, formState } = useForm();
+const schema = z.object({
+  email: z.string().email("Invalid email address"),
+});
 
-  const { focusFirstError } = useFormUX({
-    errors: formState.errors
+export default function SignupForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schema),
   });
 
-  const onSubmit = () => {};
+  const { focusFirstError, scrollToError } = useFormUX({ errors });
+
+  const onSubmit = (data) => console.log(data);
 
   const onError = () => {
-    focusFirstError();
+    // Let React render the error spans before scrolling to them
+    setTimeout(() => {
+      scrollToError();
+      focusFirstError();
+    }, 100);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
+      {/* Optional: Render an accessible summary block at the top */}
+      <ErrorSummary errors={errors} />
+
       <input {...register("email")} />
-      <input {...register("password")} />
+      {errors.email && <span className="error">{errors.email.message}</span>}
 
       <button type="submit">Submit</button>
     </form>
   );
 }
 ```
+
+---
+
+## 🧠 The Problem (Why does this exist?)
+
+Most React form libraries focus entirely on **form state and validation**, but developers still need to manually write imperative layout behaviors to fix the UX:
+
+- focusing the first invalid input after submit
+- scrolling long forms up to the first hidden error
+- extracting error paths into accessible summary blocks
+
+Example of common ad-hoc code developers must write repeatedly:
+```javascript
+const firstError = document.querySelector("[aria-invalid='true']");
+firstError?.focus();
+```
+
+`react-form-ux` provides exactly these **reusable UX primitives** so you never have to write that brittle DOM-querying logic again.
 
 ---
 
