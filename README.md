@@ -1,5 +1,9 @@
 # react-form-ux
 
+![npm version](https://img.shields.io/npm/v/react-form-ux)
+![npm downloads](https://img.shields.io/npm/dw/react-form-ux)
+![license](https://img.shields.io/npm/l/react-form-ux)
+
 Fix common React form UX problems in seconds.
 
 `react-form-ux` is a lightweight utility library that improves the **user experience of React forms** by handling common UX tasks like:
@@ -40,9 +44,11 @@ Submitting an invalid form automatically scrolls to the first error and focuses 
 ```bash
 npm install react-form-ux
 ```
+
 ```bash
 yarn add react-form-ux
 ```
+
 ```bash
 pnpm add react-form-ux
 ```
@@ -63,22 +69,22 @@ const { focusFirstError, scrollToError } = useFormUX({
 
 // 2. Call them in your form submission handler!
 const onError = () => {
-    // We recommend a tiny timeout so React has time to paint 
-    // any new error summary elements to the DOM first!
-    setTimeout(() => {
-        scrollToError();
-        focusFirstError();
-    }, 100);
-}
+  // We recommend a tiny timeout so React has time to paint
+  // any new error summary elements to the DOM first!
+  setTimeout(() => {
+    scrollToError();
+    focusFirstError();
+  }, 100);
+};
 ```
 
 ### Available API Helpers:
 
-| Function          | Description                                   |
-| ----------------- | --------------------------------------------- |
-| `focusFirstError()` | Focus the first invalid input field           |
-| `scrollToError()`   | Scroll smoothly to the first validation error |
-| `getErrorFields()`  | Get an array of field names with validation errors|
+| Function            | Description                                        |
+| ------------------- | -------------------------------------------------- |
+| `focusFirstError()` | Focus the first invalid input field                |
+| `scrollToError()`   | Scroll smoothly to the first validation error      |
+| `getErrorFields()`  | Get an array of field names with validation errors |
 
 ---
 
@@ -97,7 +103,11 @@ const schema = z.object({
 });
 
 export default function SignupForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
@@ -138,6 +148,7 @@ Most React form libraries focus entirely on **form state and validation**, but d
 - extracting error paths into accessible summary blocks
 
 Example of common ad-hoc code developers must write repeatedly:
+
 ```javascript
 const firstError = document.querySelector("[aria-invalid='true']");
 firstError?.focus();

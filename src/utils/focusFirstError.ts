@@ -10,6 +10,9 @@ export function focusFirstError(errors: Record<string, unknown>) {
   const element = document.querySelector(
     `[name="${firstField}"]`
   ) as HTMLElement | null
+    ?? document.querySelector(
+    `[id="${firstField}"]`
+  ) as HTMLElement | null
 
   element?.focus()
 }

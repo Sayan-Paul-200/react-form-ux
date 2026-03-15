@@ -9,6 +9,8 @@ export function scrollToError(errors: Record<string, unknown>) {
 
   const element = document.querySelector(
     `[name="${firstField}"]`
+  ) ?? document.querySelector(
+    `[id="${firstField}"]`
   )
 
   element?.scrollIntoView({

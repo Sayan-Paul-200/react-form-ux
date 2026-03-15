@@ -15,8 +15,13 @@ export function ErrorSummary({
       <strong>{title}</strong>
 
       <ul>
-        {fields.map((field) => {
-          const message = errors?.[field]?.message ?? "Invalid field"
+      {fields.map((field) => {
+          const parts = field.split(".")
+          let error: any = errors
+          for (const part of parts) {
+            error = error?.[part]
+          }
+          const message = error?.message ?? "Invalid field"
 
           return (
             <li key={field}>
@@ -25,6 +30,9 @@ export function ErrorSummary({
                 onClick={() => {
                   const element = document.querySelector(
                     `[name="${field}"]`
+                  ) as HTMLElement | null
+                    ?? document.querySelector(
+                    `[id="${field}"]`
                   ) as HTMLElement | null
 
                   element?.focus()
