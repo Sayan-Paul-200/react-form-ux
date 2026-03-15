@@ -1,6 +1,6 @@
 {
   "name": "react-form-ux",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "UX helpers for React forms (focus errors, scroll to validation, error summaries).",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
